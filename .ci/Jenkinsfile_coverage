@@ -29,41 +29,26 @@ kibanaPipeline(timeoutMinutes: 240) {
         ),
       ])
       workers.base(name: 'coverage-worker', size: 'l', ramDisk: false, bootstrapped: false) {
+
         kibanaPipeline.downloadCoverageArtifacts()
+
         def timestamp = new Date(currentBuild.startTimeInMillis).format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"))
         withEnv([
           "TIME_STAMP=${timestamp}",
         ]) {
-          collectVcsInfo()
+
+          kibanaCoverage.collectVcsInfo("### Collect VCS Info")
+
           def vaultSecret = 'secret/kibana-issues/prod/coverage/elasticsearch'
           withVaultSecret(secret: vaultSecret, secret_field: 'host', variable_name: 'HOST_FROM_VAULT') {
             withVaultSecret(secret: vaultSecret, secret_field: 'username', variable_name: 'USER_FROM_VAULT') {
               withVaultSecret(secret: vaultSecret, secret_field: 'password', variable_name: 'PASS_FROM_VAULT') {
-                kibanaPipeline.bash("""
-                source src/dev/ci_setup/setup_env.sh
-
-                # bootstrap from x-pack folder
-                cd x-pack
-                yarn kbn bootstrap --prefer-offline
-
-                # Return to project root
-                cd ..
-
-                . src/dev/code_coverage/shell_scripts/extract_archives.sh
-
-                . src/dev/code_coverage/shell_scripts/fix_html_reports_parallel.sh
-
-                . src/dev/code_coverage/shell_scripts/merge_jest_and_functional.sh
-
-                . src/dev/code_coverage/shell_scripts/copy_mocha_reports.sh
-
-                . src/dev/code_coverage/shell_scripts/ingest_coverage.sh ${BUILD_NUMBER} ${env.BUILD_URL}
-
-                """, "### Bootstrap shell and kibana env, merge and ingest code coverage")
+                kibanaCoverage.bootMergeAndIngest(${BUILD_NUMBER}, ${BUILD_URL})
               }
             }
           }
-          kibanaCoverage.uploadCoverageStaticSite(TIME_STAMP)
+          // index.html 404.html, & target/kibana-coverage/${TEST RUNNER TYPE}-combined/**/*.{js,css,html,txt}
+          kibanaCoverage.uploadCoverageStaticData(TIME_STAMP)
         }
       }
     }
@@ -71,41 +56,6 @@ kibanaPipeline(timeoutMinutes: 240) {
   }
 }
 
-def collectVcsInfo() {
-  kibanaPipeline.bash(
-    '''
-
-    predicate() {
-      x=$1
-      if [ -n "$x" ]; then
-        return
-      else
-        echo "### 1 or more variables that Code Coverage needs, are undefined"
-        exit 1
-      fi
-    }
-
-    CMD="git log --pretty=format"
-
-    XS=("${GIT_BRANCH}" \
-        "$(${CMD}":%h" -1)" \
-        "$(${CMD}":%an" -1)" \
-        "$(${CMD}":%s" -1)")
-
-    touch VCS_INFO.txt
-
-    git log --oneline | sed -n 2p | awk '{print $1}' > VCS_INFO.txt
-
-    for X in "${!XS[@]}"; do
-    {
-      predicate "${XS[X]}"
-      echo "${XS[X]}" >> VCS_INFO.txt
-    }
-    done
-
-    ''', "### Collect VCS Info"
-  )
-}
 def ossProks() {
   return [
     'oss-ciGroup1' : kibanaPipeline.ossCiGroupProcess(1),
