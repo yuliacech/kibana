@@ -58,8 +58,6 @@ describe('Ingesting Coverage to Cluster', () => {
   const justTotalPath = 'jest-combined/coverage-summary-just-total.json';
   const noTotalsPath = 'jest-combined/coverage-summary-NO-total.json';
   const bothIndexesPath = 'jest-combined/coverage-summary-manual-mix.json';
-  const moreThanOneKibanaInPath =
-    'jest-combined/coverage-summary-manual-mix-for-testing-kibana-path-error-dima-found.json';
 
   describe('with NODE_ENV set to "integration_test"', () => {
     describe(`and debug || verbose turned on`, () => {
@@ -186,50 +184,6 @@ describe('Ingesting Coverage to Cluster', () => {
             const portion = filteredWith(commitMsg);
             expect(portion).to.contain(commitMsg);
             expect(portion).to.contain(`"Lorem :) ipsum Tre' λ dolor sit amet, consectetur ..."`);
-          });
-        });
-      });
-      describe(`when 'kibana'`, () => {
-        const chunks = [];
-
-        const parseForCoveredFilePath = xs =>
-          xs
-            .filter(x => x.includes('coveredFilePath'))[0]
-            .split(',')
-            .filter(x => x.includes('coveredFilePath'))
-            .join('/')
-            .replace('"', '')
-            .replace('coveredFilePath":', '')
-            .trim()
-            .replace(/"/g, '');
-
-        let coveredFilePath;
-
-        beforeAll(done => {
-          const ingestAndMutateAsync = ingestAndMutate(done);
-          const ingestAndMutateMoreThanOneKibana = ingestAndMutateAsync(moreThanOneKibanaInPath);
-          const verboseIngestAndMutateAsyncWithPath = ingestAndMutateMoreThanOneKibana(verboseArgs);
-          verboseIngestAndMutateAsyncWithPath(chunks);
-        });
-
-        beforeAll(function loseRaceOfChunksArray() {
-          // This 'should' run after the first beforeAll()
-          coveredFilePath = parseForCoveredFilePath(chunks);
-        });
-
-        describe(`exists in the 'covered file path' more than once`, () => {
-          it(`should only truncate the first one`, () => {
-            expect(coveredFilePath).to.be(
-              'src/legacy/core_plugins/kibana/public/discover/get_inner_angular.ts'
-            );
-          });
-        });
-
-        describe(`exists in the 'static site url' more than once`, () => {
-          it(`should only truncate the first one`, () => {
-            expect(siteUrlsSplitByNewLineWithoutBlanks(chunks)[1]).to.contain(
-              'https://kibana-coverage.elastic.dev/2020-03-02T21:11:47Z/jest-combined/src/legacy/core_plugins/kibana/public/discover/get_inner_angular.ts.html'
-            );
           });
         });
       });
