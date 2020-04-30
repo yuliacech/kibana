@@ -83,10 +83,10 @@ def downloadPrevious(title) {
 
 def uploadPrevious(title) {
   withGcpServiceAccount.fromVaultSecret(vaultPath(), 'value') {
-    kibanaPipeline.bash("""
+    kibanaPipeline.bash('''
 
     collectPrevious() {
-      PREVIOUS=\$(git log --pretty=format:%h -1)
+      PREVIOUS=$(git log --pretty=format:%h -1)
       echo "### PREVIOUS: ${PREVIOUS}"
       echo $PREVIOUS > previous.txt
     }
@@ -95,7 +95,7 @@ def uploadPrevious(title) {
     gsutil cp previous.txt gs://elastic-bekitzur-kibana-coverage-live/previous_pointer/
 
 
-    """, title)
+    ''', title)
 
   }
 }

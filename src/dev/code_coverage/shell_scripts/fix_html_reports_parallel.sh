@@ -9,6 +9,6 @@ du -sh $COMBINED_EXRACT_DIR
 
 echo "### Replacing path in json files"
 for i in {1..9}; do
-  sed -i "s|/dev/shm/workspace/kibana|${PWD}|g" $COMBINED_EXRACT_DIR/functional/${i}*.json &
+  sed -i "s|/dev/shm/workspace/kibana[0-9]*|$pwd|g" $COMBINED_EXRACT_DIR/functional/${i}*.json &
 done
 wait
