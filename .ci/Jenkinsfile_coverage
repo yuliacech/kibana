@@ -67,13 +67,14 @@ kibanaPipeline(timeoutMinutes: 240) {
             du -sh /tmp/extracted_coverage/target/kibana-coverage/
             echo replacing path in json files
             for i in {1..9}; do
-              sed -i "s|/dev/shm/workspace/kibana|$pwd|g" /tmp/extracted_coverage/target/kibana-coverage/functional/${i}*.json &
+              sed -i "s|/dev/shm/workspace/kibana[0-9]*|$pwd|g" /tmp/extracted_coverage/target/kibana-coverage/functional/${i}*.json &
             done
             wait
             # merge oss & x-pack reports
             echo merging coverage reports
-            yarn nyc report --temp-dir /tmp/extracted_coverage/target/kibana-coverage/jest --report-dir target/kibana-coverage/jest-combined --reporter=html --reporter=json-summary
-            yarn nyc report --temp-dir /tmp/extracted_coverage/target/kibana-coverage/functional --report-dir target/kibana-coverage/functional-combined --reporter=html --reporter=json-summary
+            export COVERAGE_TEMP_DIR=/tmp/extracted_coverage/target/kibana-coverage/
+            yarn nyc report --nycrc-path src/dev/coverage/nyc.jest.config.js
+            yarn nyc report --nycrc-path src/dev/coverage/nyc.functional.config.js
             echo copy mocha reports
             mkdir -p target/kibana-coverage/mocha-combined
             cp -r /tmp/extracted_coverage/target/kibana-coverage/mocha target/kibana-coverage/mocha-combined
