@@ -58,6 +58,7 @@ def collectVcsInfo(title) {
       echo "${XS[X]}" >> VCS_INFO.txt
     }
     done
+    echo "${TIME_STAMP}" >> VCS_INFO.txt
     echo "### VCS_INFO:"
     cat VCS_INFO.txt
     ''', title
