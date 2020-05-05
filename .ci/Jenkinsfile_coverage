@@ -22,9 +22,10 @@ kibanaPipeline(timeoutMinutes: 240) {
 def handleIngestion(timestamp) {
   println timestamp
 //  kibanaPipeline.downloadCoverageArtifacts()
+  kibanaCoverage.prokLinks("### Process HTML Links")
   kibanaCoverage.collectVcsInfo("### Collect VCS Info")
 //  kibanaCoverage.ingest(timestamp, '### Injest && Upload')
-//  kibanaCoverage.uploadCoverageStaticSite(timestamp)
+  kibanaCoverage.uploadCoverageStaticSite(timestamp)
 }
 
 
