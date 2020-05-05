@@ -38,6 +38,7 @@ def uploadWithVault(prefix, x) {
 
 def prokLinks(title) {
   kibanaPipeline.bash('''
+    touch ../src/dev/code_coverage/www/index_partial_2.html
     cat << EOF > ../src/dev/code_coverage/www/index_partial_2.html
             <a class="nav-link" href="https://kibana-coverage.elastic.dev/${TIME_STAMP}/jest-combined/index.html">Latest Jest</a>
             <a class="nav-link" href="https://kibana-coverage.elastic.dev/${TIME_STAMP}/mocha-combined/index.html">Latest Mocha</a>
@@ -62,16 +63,14 @@ def prokLinks(title) {
     </div>
     </body>
     </html>
-
-    EOF
-
+  ''', title)
+  kibanaPipeline.bash('''
     cat ../src/dev/code_coverage/www/index_partial.html > ../src/dev/code_coverage/www/index.html
     cat ../src/dev/code_coverage/www/index_partial_2.html >> ../src/dev/code_coverage/www/index.html
 
     echo "### Prok'd Index File: ..."
     cat ../src/dev/code_coverage/www/index.html
-
-  ''', title)
+  ''', "### Combine Index Partials")
 }
 def collectVcsInfo(title) {
   kibanaPipeline.bash('''
