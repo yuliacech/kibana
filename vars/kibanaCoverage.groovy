@@ -38,7 +38,7 @@ def uploadWithVault(prefix, x) {
 
 def prokLinks(title) {
   kibanaPipeline.bash('''
-    cat << END > ../src/dev/code_coverage/www/index_partial_2.html
+    cat << EOF > ../src/dev/code_coverage/www/index_partial_2.html
             <a class="nav-link" href="https://kibana-coverage.elastic.dev/${TIME_STAMP}/jest-combined/index.html">Latest Jest</a>
             <a class="nav-link" href="https://kibana-coverage.elastic.dev/${TIME_STAMP}/mocha-combined/index.html">Latest Mocha</a>
             <a class="nav-link" href="https://kibana-coverage.elastic.dev/${TIME_STAMP}/functional-combined/index.html">Latest FTR</a>
@@ -63,8 +63,7 @@ def prokLinks(title) {
     </body>
     </html>
 
-
-    END
+    EOF
 
     cat ../src/dev/code_coverage/www/index_partial.html > ../src/dev/code_coverage/www/index.html
     cat ../src/dev/code_coverage/www/index_partial_2.html >> ../src/dev/code_coverage/www/index.html
