@@ -38,7 +38,6 @@ def uploadWithVault(prefix, x) {
 
 def prokLinks(title) {
   kibanaPipeline.bash('''
-    touch ../src/dev/code_coverage/www/index_partial_2.html
     cat << EOF > ../src/dev/code_coverage/www/index_partial_2.html
             <a class="nav-link" href="https://kibana-coverage.elastic.dev/${TIME_STAMP}/jest-combined/index.html">Latest Jest</a>
             <a class="nav-link" href="https://kibana-coverage.elastic.dev/${TIME_STAMP}/mocha-combined/index.html">Latest Mocha</a>
