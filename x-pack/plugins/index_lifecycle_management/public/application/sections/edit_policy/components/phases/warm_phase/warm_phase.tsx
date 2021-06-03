@@ -17,6 +17,7 @@ import {
   ShrinkField,
   ReadonlyField,
   ReplicasField,
+  RollupField,
 } from '../shared_fields';
 
 import { Phase } from '../phase';
@@ -41,6 +42,8 @@ export const WarmPhase: FunctionComponent = () => {
       {!isUsingSearchableSnapshotInHotPhase && <ForcemergeField phase="warm" />}
 
       {!isUsingSearchableSnapshotInHotPhase && <ReadonlyField phase="warm" />}
+
+      <RollupField phase="warm" />
 
       {/* Data tier allocation section */}
       <DataTierAllocationField

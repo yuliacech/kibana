@@ -140,6 +140,17 @@ const getMinAgeField = (phase: MinAgePhase, defaultValue?: string) => ({
   ],
 });
 
+const timeBucketSizeField = {
+  label: i18n.translate('xpack.indexLifecycleMgmt.editPolicy.timeBucketSizeLabel', {
+    defaultMessage: 'Resolution',
+  }),
+  validations: [
+    {
+      validator: emptyField(i18nTexts.editPolicy.errors.numberRequired),
+    },
+  ],
+};
+
 export const getSchema = (isCloudEnabled: boolean): FormSchema => ({
   _meta: {
     hot: {
@@ -374,6 +385,9 @@ export const getSchema = (isCloudEnabled: boolean): FormSchema => ({
         set_priority: {
           priority: getPriorityField('hot'),
         },
+        rollup: {
+          time_bucket_size: timeBucketSizeField,
+        },
         searchable_snapshot: searchableSnapshotFields,
       },
     },
@@ -391,6 +405,9 @@ export const getSchema = (isCloudEnabled: boolean): FormSchema => ({
         },
         set_priority: {
           priority: getPriorityField('warm'),
+        },
+        rollup: {
+          time_bucket_size: timeBucketSizeField,
         },
       },
     },

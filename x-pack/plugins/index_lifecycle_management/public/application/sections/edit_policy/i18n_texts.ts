@@ -42,6 +42,9 @@ export const i18nTexts = {
     readonlyEnabledFieldLabel: i18n.translate('xpack.indexLifecycleMgmt.readonlyFieldLabel', {
       defaultMessage: 'Make index read only',
     }),
+    rollupEnabledFieldLabel: i18n.translate('xpack.indexLifecycleMgmt.rollupFieldLabel', {
+      defaultMessage: 'Rollup the index',
+    }),
     maxNumSegmentsFieldLabel: i18n.translate(
       'xpack.indexLifecycleMgmt.forceMerge.numberOfSegmentsLabel',
       {

@@ -26,6 +26,7 @@ import { LearnMoreLink, DescribedFormRow } from '../../';
 import {
   ForcemergeField,
   IndexPriorityField,
+  RollupField,
   SearchableSnapshotField,
   ReadonlyField,
   ShrinkField,
@@ -169,6 +170,7 @@ export const HotPhase: FunctionComponent = () => {
           <ShrinkField phase={'hot'} />
           {license.canUseSearchableSnapshot() && <SearchableSnapshotField phase="hot" />}
           <ReadonlyField phase={'hot'} />
+          <RollupField phase={'hot'} />
         </>
       )}
       <IndexPriorityField phase={'hot'} />

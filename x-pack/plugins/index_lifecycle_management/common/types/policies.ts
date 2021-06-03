@@ -86,6 +86,9 @@ export interface SerializedHotPhase extends SerializedPhase {
     readonly?: {};
     shrink?: ShrinkAction;
 
+    rollup?: {
+      time_bucket_size: string;
+    };
     set_priority?: {
       priority: number | null;
     };
@@ -105,6 +108,9 @@ export interface SerializedWarmPhase extends SerializedPhase {
     set_priority?: {
       priority: number | null;
     };
+    rollup?: {
+      time_bucket_size: string;
+    };
     migrate?: MigrateAction;
   };
 }
@@ -118,6 +124,9 @@ export interface SerializedColdPhase extends SerializedPhase {
       priority: number | null;
     };
     migrate?: MigrateAction;
+    rollup?: {
+      time_bucket_size: string;
+    };
     /**
      * Only available on enterprise license
      */
@@ -133,6 +142,9 @@ export interface SerializedFrozenPhase extends SerializedPhase {
       priority: number | null;
     };
     migrate?: MigrateAction;
+    rollup?: {
+      time_bucket_size: string;
+    };
     /**
      * Only available on enterprise license
      */
